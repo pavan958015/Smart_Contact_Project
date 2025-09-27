@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
+<head>
+  <title>Signup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<!-- Full height flexbox to center -->
+
+<body class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+
+  <!--  Wrapper for responsive max width -->
+  <div id="content" class="w-full max-w-md-4">
+
+    <!-- Card -->
+    <div class="p-6 border-t-[7px] border-blue-600 bg-white border rounded-lg shadow-lg hover:bg-gray-100 
+             dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
+        Signup Here
+      </h5>
+      <p class="font-normal text-gray-500 dark:text-gray-400 text-center mb-4">
+        I am Pavan Soni
+      </p>
+
+      <form action="" class="space-y-4">
+
+        <!-- Name -->
+        <div>
+          <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+          <input type="text" id="name" class="w-full p-2.5 text-sm rounded-lg border bg-gray-50 border-gray-300 text-gray-900 
+                   focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
+                   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Enter here" required />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+          <input type="email" id="email" class="w-full p-2.5 text-sm rounded-lg border bg-gray-50 border-gray-300 text-gray-900 
+                   focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
+                   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Enter Email" required />
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+          <input type="password" id="password" class="w-full p-2.5 text-sm rounded-lg border bg-gray-50 border-gray-300 text-gray-900 
+                   focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
+                   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Enter password" required />
+        </div>
+
+        <!-- Contact Number -->
+        <div>
+          <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
+          <input type="text" id="phone" class="w-full p-2.5 text-sm rounded-lg border bg-gray-50 border-gray-300 text-gray-900 
+                   focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
+                   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Enter number" required />
+        </div>
+
+        <!-- About -->
+        <div>
+          <label for="about" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Write Something About
+            Yourself</label>
+          <textarea id="about" rows="4" class="w-full p-2.5 text-sm rounded-lg border bg-gray-50 border-gray-300 text-gray-900 
+                   focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 
+                   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Write your thoughts here..."></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-center space-x-4">
+          <button type="submit"
+            class="px-5 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-900 dark:bg-blue-900 dark:hover:bg-blue-800">
+            Signup
+          </button>
+          <button type="reset"
+            class="px-5 py-2 rounded-lg bg-red-600 text-white hover:bg-red-800 dark:bg-orange-900 dark:hover:bg-orange-700">
+            Reset
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script>
+    console.log("Signup page");
+  </script>
+</body>
+
+</html>
