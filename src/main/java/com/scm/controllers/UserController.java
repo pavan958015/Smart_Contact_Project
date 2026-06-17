@@ -35,6 +35,12 @@ public class UserController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private com.scm.services.EmailService emailService;
+
+    @Autowired
+    private Helper helper;
+
     // user dashbaord page
 
     @RequestMapping(value = "/dashboard")

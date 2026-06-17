@@ -122,8 +122,15 @@ public class PageController {
         user.setAbout(userForm.getAbout());
         user.setPhoneNumber(userForm.getPhoneNumber());
         user.setEnabled(false);
-        user.setProfilePic(
-                "https://www.learncodewithdurgesh.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdurgesh_sir.35c6cb78.webp&w=1920&q=75");
+        user.setEmailVerified(false);
+        String fallbackUrl = "https://ui-avatars.com/api/?name=" + user.getName().replace(" ", "+") + "&background=059669&color=fff";
+        try {
+            String hash = org.springframework.util.DigestUtils.md5DigestAsHex(user.getEmail().trim().toLowerCase().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            String encodedFallback = java.net.URLEncoder.encode(fallbackUrl, "UTF-8");
+            user.setProfilePic("https://www.gravatar.com/avatar/" + hash + "?d=" + encodedFallback);
+        } catch (Exception e) {
+            user.setProfilePic(fallbackUrl);
+        }
 
         User savedUser = userService.saveUser(user);
 

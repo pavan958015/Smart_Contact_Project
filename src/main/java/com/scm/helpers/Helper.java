@@ -49,8 +49,22 @@ public class Helper {
     }
 
     public String getLinkForEmailVerificatiton(String emailToken) {
-
+        try {
+            var attributes = (org.springframework.web.context.request.ServletRequestAttributes) org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
+            if (attributes != null) {
+                var request = attributes.getRequest();
+                String scheme = request.getHeader("X-Forwarded-Proto");
+                if (scheme == null || scheme.isEmpty()) {
+                    scheme = request.getScheme();
+                }
+                String host = request.getHeader("Host");
+                if (host != null && !host.isEmpty()) {
+                    return scheme + "://" + host + request.getContextPath() + "/auth/verify-email?token=" + emailToken;
+                }
+            }
+        } catch (Exception e) {
+            // fallback to configured properties baseUrl
+        }
         return this.baseUrl + "/auth/verify-email?token=" + emailToken;
-
     }
 }
