@@ -1,7 +1,7 @@
 @echo off
-title Git Auto Commit & Push
+title Git Auto Commit and Push
 echo ==============================================
-echo       SCM 2.0 Git Auto Commit & Push
+echo       SCM 2.0 Git Auto Commit and Push
 echo ==============================================
 echo.
 
