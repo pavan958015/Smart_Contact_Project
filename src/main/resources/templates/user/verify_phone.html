@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
+<head>
+  <title>Verify Phone Number | SCM</title>
+</head>
+
+<body>
+  <div id="content">
+    
+    <!-- Sidebar Fragment -->
+    <div th:if="${loggedInUser}">
+      <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="sm:pl-64 pt-20 min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white transition-all duration-300">
+      <div class="max-w-md mx-auto px-6 py-10">
+        
+        <!-- Page Header -->
+        <div class="mb-8 text-center space-y-2">
+          <div class="inline-flex p-4 bg-emerald-500/10 text-emerald-600 rounded-full mb-3">
+            <i class="fa-solid fa-shield-halved text-3xl"></i>
+          </div>
+          <h1 class="text-2xl font-black tracking-tight">OTP Verification</h1>
+          <p class="text-xs text-gray-400">
+            We have sent a verification code to your registered mobile number: 
+            <span class="font-bold text-gray-800 dark:text-gray-250" th:text="${maskedPhone}">******8914</span>
+          </p>
+          <p class="text-2xs text-amber-600 dark:text-amber-400 mt-2">
+            <i class="fa-solid fa-circle-info"></i> For local testing, please check your server terminal logs to retrieve the generated OTP.
+          </p>
+        </div>
+
+        <div data-th-replace="~{message::messagebox}"></div>
+
+        <!-- Verification Card -->
+        <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 rounded-3xl shadow-xl p-8 transition-all duration-300">
+          
+          <form data-th-action="@{/user/profile/verify-phone}" method="post" id="otp-form">
+            
+            <input type="hidden" name="otp" id="final-otp" />
+
+            <!-- Digit inputs container -->
+            <div class="flex justify-center gap-3 my-6" id="otp-inputs">
+              <input type="text" pattern="[0-9]" maxlength="1" inputmode="numeric" required
+                     class="otp-field w-12 h-14 text-center text-xl font-black rounded-2xl border border-gray-300/60 dark:border-gray-800/60 bg-gray-50/50 dark:bg-gray-950/30 text-gray-900 dark:text-white focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all duration-150" />
+              <input type="text" pattern="[0-9]" maxlength="1" inputmode="numeric" required
+                     class="otp-field w-12 h-14 text-center text-xl font-black rounded-2xl border border-gray-300/60 dark:border-gray-800/60 bg-gray-50/50 dark:bg-gray-950/30 text-gray-900 dark:text-white focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all duration-150" />
+              <input type="text" pattern="[0-9]" maxlength="1" inputmode="numeric" required
+                     class="otp-field w-12 h-14 text-center text-xl font-black rounded-2xl border border-gray-300/60 dark:border-gray-800/60 bg-gray-50/50 dark:bg-gray-950/30 text-gray-900 dark:text-white focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all duration-150" />
+              <input type="text" pattern="[0-9]" maxlength="1" inputmode="numeric" required
+                     class="otp-field w-12 h-14 text-center text-xl font-black rounded-2xl border border-gray-300/60 dark:border-gray-800/60 bg-gray-50/50 dark:bg-gray-950/30 text-gray-900 dark:text-white focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all duration-150" />
+              <input type="text" pattern="[0-9]" maxlength="1" inputmode="numeric" required
+                     class="otp-field w-12 h-14 text-center text-xl font-black rounded-2xl border border-gray-300/60 dark:border-gray-800/60 bg-gray-50/50 dark:bg-gray-950/30 text-gray-900 dark:text-white focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all duration-150" />
+              <input type="text" pattern="[0-9]" maxlength="1" inputmode="numeric" required
+                     class="otp-field w-12 h-14 text-center text-xl font-black rounded-2xl border border-gray-300/60 dark:border-gray-800/60 bg-gray-50/50 dark:bg-gray-950/30 text-gray-900 dark:text-white focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all duration-150" />
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="w-full py-3.5 text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 rounded-2xl shadow-lg hover:shadow-emerald-600/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-circle-check"></i>
+              Verify Code
+            </button>
+
+          </form>
+
+          <!-- Action options -->
+          <div class="mt-6 flex flex-col items-center justify-center gap-3 text-xs">
+            <p class="text-gray-400">
+              Didn't receive code? 
+              <a data-th-href="@{/user/profile/verify-phone/resend}" class="font-extrabold text-emerald-600 hover:text-emerald-700 hover:underline">Resend OTP</a>
+            </p>
+            <a data-th-href="@{/user/profile}" class="text-gray-400 hover:text-gray-650 hover:underline">
+              Back to Profile
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Autofocus shifting logic for OTP input boxes
+    const fields = document.querySelectorAll('.otp-field');
+    
+    // Set focus on first field on load
+    if (fields.length > 0) {
+      fields[0].focus();
+    }
+
+    fields.forEach((field, index) => {
+      field.addEventListener('input', (e) => {
+        // Allow only digits
+        if (field.value && !/^[0-9]$/.test(field.value)) {
+          field.value = '';
+          return;
+        }
+
+        // Shift focus to next input
+        if (field.value.length === 1 && index < fields.length - 1) {
+          fields[index + 1].focus();
+        }
+      });
+
+      field.addEventListener('keydown', (e) => {
+        // Shift focus to previous input on backspace if empty
+        if (e.key === 'Backspace' && !field.value && index > 0) {
+          fields[index - 1].focus();
+        }
+      });
+    });
+
+    // Assemble digits into final-otp input on form submit
+    document.getElementById('otp-form').addEventListener('submit', (e) => {
+      let otp = '';
+      fields.forEach(field => {
+        otp += field.value;
+      });
+      document.getElementById('final-otp').value = otp;
+    });
+  </script>
+</body>
+
+</html>

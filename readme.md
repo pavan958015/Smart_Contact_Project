@@ -29,6 +29,9 @@ Smart Contact Manager (SCM 2.0) is a premium, cloud-enabled contact management a
 ### 6. Social Logins & SSO Authentication
 *   **Spring Security:** Integrated traditional login forms with custom failure handlers alongside OAuth2 Clients (Google and GitHub OAuth2).
 
+### 7. Git Automation Script (`git_push.bat`)
+*   **Staging, Committing & Pushing:** Double-click the helper script in Windows File Explorer or run it in the terminal to automatically check status, prompt for a commit message, stage changes, commit, and push updates directly to GitHub.
+
 ---
 
 ## 🛠️ Technology Stack
@@ -96,6 +99,20 @@ spring.mail.password=${MAIL_PASSWORD:your_app_password}
     A default admin profile is created automatically on start:
     *   **Username:** `admin@gmail.com`
     *   **Password:** `admin`
+
+### 🔄 Git Push Automation Script
+The project includes a custom helper script [git_push.bat](file:///c:/Users/Pavan%20Soni/Downloads/scm2.0-main_Final/scm2.0-main/git_push.bat) at the root level to automate Git commits and pushes:
+
+1. **How to Run (via Terminal):**
+   ```powershell
+   .\git_push.bat
+   ```
+2. **How to Run (via Windows Explorer):**
+   * Go to the project root directory in Windows Explorer.
+   * Double-click `git_push.bat` to launch it in a command window.
+   * *(Note: Double-clicking it inside VS Code or another IDE file tree will only open the file for editing. Make sure to double-click from Windows File Explorer).*
+
+The script will show current `git status`, ask you for a commit message (with a fallback default), stage all changes, commit, and push directly to `origin main`.
 
 ---
 

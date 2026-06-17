@@ -18,10 +18,21 @@
       <div class="max-w-4xl mx-auto px-6 py-10">
         
         <!-- Page Header -->
-        <div class="mb-8 space-y-2">
-          <h1 class="text-3xl font-extrabold tracking-tight">Account Settings</h1>
-          <p class="text-xs text-gray-400">View and review your profile details and credential security status.</p>
+        <div class="mb-8 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <div class="space-y-1">
+            <h1 class="text-3xl font-extrabold tracking-tight">Account Settings</h1>
+            <p class="text-xs text-gray-400">View and review your profile details and credential security status.</p>
+          </div>
+          <div>
+            <a data-th-href="@{'/user/profile/edit'}"
+               class="px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-2xl shadow-lg hover:shadow-emerald-600/20 active:scale-95 transition-all duration-200 flex items-center gap-2">
+              <i class="fa-solid fa-user-pen"></i>
+              Edit Profile
+            </a>
+          </div>
         </div>
+
+        <div data-th-replace="~{message::messagebox}"></div>
 
         <!-- Main Glassmorphic Profile Card -->
         <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 rounded-3xl shadow-xl overflow-hidden transition-all duration-300">
@@ -135,11 +146,35 @@
                       <p class="text-3xs text-gray-400 mt-0.5">Two-factor alerts</p>
                     </div>
                   </div>
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold shadow-sm"
-                        data-th-classappend="${loggedInUser.phoneVerified ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-500/10' : 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400 border border-red-500/10'}">
-                    <i class="fa-solid" data-th-classappend="${loggedInUser.phoneVerified ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
-                    <span data-th-text="${loggedInUser.phoneVerified ? 'VERIFIED' : 'PENDING'}">NO</span>
-                  </span>
+                  
+                  <!-- If phone is verified -->
+                  <div th:if="${loggedInUser.phoneVerified}">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold shadow-sm bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-500/10">
+                      <i class="fa-solid fa-circle-check"></i>
+                      <span>VERIFIED</span>
+                    </span>
+                  </div>
+
+                  <!-- If phone is NOT verified -->
+                  <div th:if="${!loggedInUser.phoneVerified}" class="flex flex-col items-end gap-1">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold shadow-sm bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-400 border border-red-500/10">
+                      <i class="fa-solid fa-circle-xmark"></i>
+                      <span>PENDING</span>
+                    </span>
+                    
+                    <!-- If number is configured -->
+                    <a th:if="${loggedInUser.phoneNumber != null && !loggedInUser.phoneNumber.isEmpty()}" 
+                       data-th-href="@{/user/profile/verify-phone}" 
+                       class="text-3xs font-extrabold text-emerald-600 hover:text-emerald-700 dark:text-emerald-450 dark:hover:text-emerald-400 hover:underline">
+                      Verify Now
+                    </a>
+                    
+                    <!-- If number is NOT configured -->
+                    <span th:if="${loggedInUser.phoneNumber == null || loggedInUser.phoneNumber.isEmpty()}" 
+                          class="text-3xs text-gray-450 dark:text-gray-500">
+                      Add phone to verify
+                    </span>
+                  </div>
                 </div>
 
               </div>

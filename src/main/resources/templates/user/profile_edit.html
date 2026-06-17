@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
+<head>
+  <title>Edit Profile | SCM</title>
+</head>
+
+<body>
+  <div id="content">
+    
+    <!-- Sidebar Fragment -->
+    <div th:if="${loggedInUser}">
+      <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="sm:pl-64 pt-20 min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white transition-all duration-300">
+      <div class="max-w-4xl mx-auto px-6 py-10">
+        
+        <!-- Page Header -->
+        <div class="mb-8 space-y-2">
+          <h1 class="text-3xl font-extrabold tracking-tight">Edit Profile</h1>
+          <p class="text-xs text-gray-400">Update your personal account settings and profile details.</p>
+        </div>
+
+        <div data-th-replace="~{message::messagebox}"></div>
+
+        <!-- Edit Form Card -->
+        <form
+          data-th-action="@{/user/profile/edit}"
+          data-th-object="${userProfileForm}"
+          method="post"
+          enctype="multipart/form-data"
+          class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 rounded-3xl shadow-xl overflow-hidden transition-all duration-300"
+        >
+          <!-- Card Banner Background -->
+          <div class="h-32 bg-gradient-to-r from-emerald-600 to-teal-500 relative">
+            <div class="absolute -right-6 -bottom-10 w-24 h-24 bg-white/10 rounded-full blur-lg"></div>
+          </div>
+
+          <div class="p-8 -mt-16 flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10">
+            
+            <!-- Profile Image Editor (With Preview) -->
+            <div class="relative group flex flex-col items-center">
+              <div class="relative">
+                <img
+                  id="image_preview"
+                  onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=SCM&background=059669&color=fff';"
+                  data-th-src="*{profilePic != null ? profilePic : 'https://ui-avatars.com/api/?name=User&background=059669&color=fff'}"
+                  src="https://ui-avatars.com/api/?name=User&background=059669&color=fff"
+                  alt="Profile Photo"
+                  class="w-36 h-36 rounded-3xl shadow-xl object-cover border-4 border-white dark:border-gray-900 bg-white ring-2 ring-emerald-500/20"
+                />
+                <label
+                  for="profileImageInput"
+                  class="absolute -bottom-2 -right-2 p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-lg border border-white dark:border-gray-900 cursor-pointer active:scale-90 transition-all duration-200"
+                  title="Upload New Photo"
+                >
+                  <i class="fa-solid fa-camera"></i>
+                </label>
+              </div>
+              <input
+                type="file"
+                id="profileImageInput"
+                data-th-field="*{profileImage}"
+                class="hidden"
+                accept="image/*"
+              />
+              <span class="text-3xs text-gray-400 mt-3">Click icon to choose image</span>
+              <p
+                class="text-red-500 text-xs mt-1"
+                data-th-if="${#fields.hasErrors('profileImage')}"
+                data-th-errors="*{profileImage}"
+              >
+                Invalid Image
+              </p>
+            </div>
+
+            <!-- Header details context -->
+            <div class="text-center md:text-left space-y-2 flex-1 pt-6 md:pt-4">
+              <h2 class="text-2xl font-black text-gray-900 dark:text-white" data-th-text="${loggedInUser.name}">User Name</h2>
+              <p class="text-sm text-gray-450 dark:text-gray-400" data-th-text="${loggedInUser.email}">user.email@example.com</p>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-emerald-100/50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border border-emerald-500/10">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span data-th-text="'Provider: ' + ${loggedInUser.provider}">SELF</span>
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Divider -->
+          <hr class="border-gray-200/40 dark:border-gray-850 mx-8" />
+
+          <!-- Form Fields Container -->
+          <div class="p-8 space-y-6">
+            
+            <div class="grid md:grid-cols-2 gap-6">
+              
+              <!-- Name Input -->
+              <div class="space-y-2">
+                <label class="text-xs font-extrabold text-gray-400 uppercase tracking-wider block">Full Name</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none text-gray-450">
+                    <i class="fa-regular fa-user"></i>
+                  </div>
+                  <input
+                    type="text"
+                    data-th-field="*{name}"
+                    placeholder="Enter full name"
+                    class="bg-gray-50/50 border border-gray-300/60 text-gray-900 text-sm rounded-2xl focus:ring-emerald-500 focus:border-emerald-500 block w-full ps-10 p-3 dark:bg-gray-950/20 dark:border-gray-800/60 dark:placeholder-gray-500 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500 transition-all duration-200"
+                  />
+                </div>
+                <p
+                  class="text-red-500 text-xs mt-1"
+                  data-th-if="${#fields.hasErrors('name')}"
+                  data-th-errors="*{name}"
+                >
+                  Name error
+                </p>
+              </div>
+
+              <!-- Email Input (Controlled) -->
+              <div class="space-y-2">
+                <label class="text-xs font-extrabold text-gray-400 uppercase tracking-wider block">Email Address</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none text-gray-450">
+                    <i class="fa-regular fa-envelope"></i>
+                  </div>
+                  
+                  <!-- If provider is SELF, email is editable -->
+                  <input
+                    th:if="${userProvider == 'SELF'}"
+                    type="text"
+                    data-th-field="*{email}"
+                    placeholder="example@gmail.com"
+                    class="bg-gray-50/50 border border-gray-300/60 text-gray-900 text-sm rounded-2xl focus:ring-emerald-500 focus:border-emerald-500 block w-full ps-10 p-3 dark:bg-gray-950/20 dark:border-gray-800/60 dark:placeholder-gray-500 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500 transition-all duration-200"
+                  />
+                  
+                  <!-- If provider is OAuth (Google/Github), email is disabled for updates -->
+                  <div th:if="${userProvider != 'SELF'}">
+                    <input
+                      type="text"
+                      th:value="*{email}"
+                      disabled
+                      class="bg-gray-200/50 dark:bg-gray-900/50 border border-gray-300/40 text-gray-400 text-sm rounded-2xl block w-full ps-10 p-3 cursor-not-allowed"
+                    />
+                    <!-- Hidden field to pass email back to model validation -->
+                    <input type="hidden" data-th-field="*{email}" />
+                  </div>
+                </div>
+                
+                <p class="text-3xs text-yellow-600 dark:text-yellow-400 mt-1" th:if="${userProvider != 'SELF'}">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Email address of Google/GitHub authenticated accounts cannot be altered.
+                </p>
+                <p
+                  class="text-red-500 text-xs mt-1"
+                  data-th-if="${#fields.hasErrors('email')}"
+                  data-th-errors="*{email}"
+                >
+                  Email error
+                </p>
+              </div>
+
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+              
+              <!-- Phone Number Input -->
+              <div class="space-y-2">
+                <label class="text-xs font-extrabold text-gray-400 uppercase tracking-wider block">Phone Number</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none text-gray-450">
+                    <i class="fa-solid fa-phone"></i>
+                  </div>
+                  <input
+                    type="text"
+                    data-th-field="*{phoneNumber}"
+                    placeholder="10-digit mobile number"
+                    class="bg-gray-50/50 border border-gray-300/60 text-gray-900 text-sm rounded-2xl focus:ring-emerald-500 focus:border-emerald-500 block w-full ps-10 p-3 dark:bg-gray-950/20 dark:border-gray-800/60 dark:placeholder-gray-500 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500 transition-all duration-200"
+                  />
+                </div>
+                <p
+                  class="text-red-500 text-xs mt-1"
+                  data-th-if="${#fields.hasErrors('phoneNumber')}"
+                  data-th-errors="*{phoneNumber}"
+                >
+                  Phone number error
+                </p>
+              </div>
+
+              <!-- Empty space helper to align grid -->
+              <div class="hidden md:block"></div>
+
+            </div>
+
+            <!-- About / Bio Input -->
+            <div class="space-y-2">
+              <label class="text-xs font-extrabold text-gray-400 uppercase tracking-wider block">Bio Description</label>
+              <textarea
+                data-th-field="*{about}"
+                rows="4"
+                placeholder="Write something about yourself..."
+                class="block p-3.5 w-full text-sm text-gray-900 bg-gray-50/50 rounded-2xl border border-gray-300/60 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-950/20 dark:border-gray-800/60 dark:placeholder-gray-500 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500 transition-all duration-200"
+              ></textarea>
+              <p
+                class="text-red-500 text-xs mt-1"
+                data-th-if="${#fields.hasErrors('about')}"
+                data-th-errors="*{about}"
+              >
+                Bio error
+              </p>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="pt-6 flex flex-wrap items-center justify-end gap-4">
+              <!-- Cancel Button -->
+              <a
+                data-th-href="@{/user/profile}"
+                class="px-6 py-3 text-xs font-bold text-gray-750 dark:text-gray-250 hover:bg-gray-100 dark:hover:bg-gray-850 rounded-2xl active:scale-95 transition-all duration-200"
+              >
+                Cancel
+              </a>
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                class="px-6 py-3 text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 rounded-2xl shadow-lg hover:shadow-emerald-600/20 active:scale-95 transition-all duration-200 flex items-center gap-2"
+              >
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Save Changes
+              </button>
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Preview selected local image before upload
+    document.getElementById('profileImageInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('image_preview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+
+</html>

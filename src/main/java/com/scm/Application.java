@@ -26,8 +26,18 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
+
 	@Override
 	public void run(String... args) throws Exception {
+		try {
+			// Make name and role columns nullable to prevent 'Field doesn't have a default value' errors on insert
+			jdbcTemplate.execute("ALTER TABLE users MODIFY COLUMN name VARCHAR(100) NULL");
+			jdbcTemplate.execute("ALTER TABLE users MODIFY COLUMN role VARCHAR(255) NULL");
+		} catch (Exception ignored) {
+		}
+
 		User user = new User();
 		user.setUserId(UUID.randomUUID().toString());
 		user.setName("admin");
