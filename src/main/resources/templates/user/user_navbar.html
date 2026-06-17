@@ -113,26 +113,26 @@
         <li>
           <a
             data-th-href="@{'/home'}"
-            class="block py-2 px-3 md:p-0 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition duration-300"
+            data-th-class="${currentURI == '/home' or currentURI == '/' or currentURI == null ? 'block py-2 px-3 md:p-0 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition duration-300' : 'block py-2 px-3 md:p-0 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-300'}"
             aria-current="page"
           >Home</a>
         </li>
         <li>
           <a
             data-th-href="@{'/about'}"
-            class="block py-2 px-3 md:p-0 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-300"
+            data-th-class="${currentURI == '/about' ? 'block py-2 px-3 md:p-0 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition duration-300' : 'block py-2 px-3 md:p-0 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-300'}"
           >About</a>
         </li>
         <li>
           <a
             data-th-href="@{'/services'}"
-            class="block py-2 px-3 md:p-0 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-300"
+            data-th-class="${currentURI == '/services' ? 'block py-2 px-3 md:p-0 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition duration-300' : 'block py-2 px-3 md:p-0 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-300'}"
           >Services</a>
         </li>
         <li>
           <a
             data-th-href="@{'/contact'}"
-            class="block py-2 px-3 md:p-0 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-300"
+            data-th-class="${currentURI == '/contact' ? 'block py-2 px-3 md:p-0 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition duration-300' : 'block py-2 px-3 md:p-0 text-gray-700 dark:text-gray-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition duration-300'}"
           >Contact</a>
         </li>
 

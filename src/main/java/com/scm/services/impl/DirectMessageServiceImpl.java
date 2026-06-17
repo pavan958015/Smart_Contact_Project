@@ -29,7 +29,7 @@ public class DirectMessageServiceImpl implements DirectMessageService {
     }
 
     @Override
-    public void sendMessageEmail(String to, String subject, String body) {
-        emailService.sendEmail(to, subject, body);
+    public void sendMessageEmail(String from, String to, String subject, String body) {
+        emailService.sendEmail(from, to, subject, body);
     }
 }

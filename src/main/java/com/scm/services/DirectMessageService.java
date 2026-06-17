@@ -7,5 +7,5 @@ import java.util.List;
 public interface DirectMessageService {
     DirectMessage saveMessage(DirectMessage message);
     List<DirectMessage> getMessagesByUser(User user);
-    void sendMessageEmail(String to, String subject, String body);
+    void sendMessageEmail(String from, String to, String subject, String body);
 }

@@ -36,4 +36,9 @@ public class RootController {
         model.addAttribute("loggedInUser", user);
 
     }
+
+    @ModelAttribute
+    public void addRequestURI(Model model, jakarta.servlet.http.HttpServletRequest request) {
+        model.addAttribute("currentURI", request.getServletPath());
+    }
 }
