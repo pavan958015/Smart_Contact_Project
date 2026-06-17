@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
+<head>
+  <title>Feedback Desk | SCM 2.0</title>
+</head>
+
+<body>
+  <div id="content">
+    
+    <!-- Sidebar Fragment -->
+    <div th:if="${loggedInUser}">
+      <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="sm:pl-64 pt-20 min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white transition-all duration-300">
+      <div class="max-w-4xl mx-auto px-6 py-10 space-y-8">
+        
+        <!-- Page Header -->
+        <div class="space-y-2">
+          <h1 class="text-3xl font-extrabold tracking-tight">Feedback Desk</h1>
+          <p class="text-xs text-gray-400">Share your thoughts, suggestions or experience to help us improve SCM 2.0.</p>
+        </div>
+
+        <!-- Feedback Form Card -->
+        <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 rounded-3xl shadow-xl p-8 transition duration-300">
+          
+          <div data-th-replace="~{message :: messagebox}"></div>
+          
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i class="fa-regular fa-comment-dots text-emerald-500"></i>
+            Submit New Feedback
+          </h2>
+
+          <form data-th-object="${feedbackForm}" th:action="@{/user/feedback}" method="POST" class="space-y-6">
+            
+            <!-- Rating star component -->
+            <div class="space-y-2">
+              <label class="block text-sm font-semibold text-gray-750 dark:text-gray-300">Your Rating</label>
+              <div class="flex items-center space-x-2" id="star-rating-container">
+                <input type="hidden" th:field="*{rating}" id="rating-input" />
+                <button type="button" class="star-btn text-4xl text-gray-300 dark:text-gray-750 hover:scale-110 transition duration-150" data-val="1">★</button>
+                <button type="button" class="star-btn text-4xl text-gray-300 dark:text-gray-750 hover:scale-110 transition duration-150" data-val="2">★</button>
+                <button type="button" class="star-btn text-4xl text-gray-300 dark:text-gray-750 hover:scale-110 transition duration-150" data-val="3">★</button>
+                <button type="button" class="star-btn text-4xl text-gray-300 dark:text-gray-750 hover:scale-110 transition duration-150" data-val="4">★</button>
+                <button type="button" class="star-btn text-4xl text-gray-300 dark:text-gray-750 hover:scale-110 transition duration-150" data-val="5">★</button>
+              </div>
+              <p class="text-red-500 text-xs mt-1" data-th-if="${#fields.hasErrors('rating')}" data-th-errors="*{rating}"></p>
+            </div>
+
+            <!-- Subject Input -->
+            <div class="space-y-1">
+              <label for="subject" class="block text-sm font-semibold text-gray-750 dark:text-gray-300">Subject</label>
+              <input type="text" th:field="*{subject}" id="subject" 
+                     class="block w-full p-3 text-sm text-gray-900 bg-gray-50/50 rounded-xl border border-gray-200/80 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-800/50 dark:border-gray-700 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500" 
+                     placeholder="Feedback Summary (e.g. Excellent UI design, bug report, etc.)" />
+              <p class="text-red-500 text-xs mt-1" data-th-if="${#fields.hasErrors('subject')}" data-th-errors="*{subject}"></p>
+            </div>
+
+            <!-- Message Input -->
+            <div class="space-y-1">
+              <label for="message" class="block text-sm font-semibold text-gray-750 dark:text-gray-300">Detailed Message</label>
+              <textarea th:field="*{message}" id="message" rows="5"
+                        class="block w-full p-3 text-sm text-gray-900 bg-gray-50/50 rounded-xl border border-gray-200/80 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-800/50 dark:border-gray-700 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500" 
+                        placeholder="Write down details of your experience..."></textarea>
+              <p class="text-red-500 text-xs mt-1" data-th-if="${#fields.hasErrors('message')}" data-th-errors="*{message}"></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4">
+              <button type="submit" 
+                      class="flex-1 text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 font-bold rounded-xl text-sm px-5 py-3 text-center transition duration-300 shadow-md hover:shadow-lg">
+                Submit Feedback
+              </button>
+              <button type="reset" id="reset-btn"
+                      class="px-5 py-3 text-sm font-bold text-gray-750 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl transition duration-300">
+                Reset
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+        <!-- Feedback History List -->
+        <div class="space-y-4">
+          <h2 class="text-xl font-bold flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-emerald-500"></i>
+            Your Past Feedback Logs
+          </h2>
+
+          <div th:if="${#lists.isEmpty(feedbacks)}" class="text-center p-10 bg-white/50 dark:bg-gray-900/50 rounded-3xl border border-dashed border-gray-200/50 dark:border-gray-800/50 text-gray-400 text-sm">
+            <i class="fa-regular fa-folder-open text-4xl block mb-3 text-gray-300"></i>
+            No feedback entries found. Be the first to share!
+          </div>
+
+          <div th:unless="${#lists.isEmpty(feedbacks)}" class="space-y-4">
+            <div th:each="feedback : ${feedbacks}" class="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm p-6 rounded-2xl border border-gray-200/40 dark:border-gray-800/40 shadow-sm space-y-3">
+              <div class="flex flex-wrap justify-between items-start gap-2">
+                <div class="space-y-1">
+                  <h3 class="font-extrabold text-base text-gray-950 dark:text-white" th:text="${feedback.subject}">Subject</h3>
+                  
+                  <!-- Render star rating icons -->
+                  <div class="flex text-amber-400 text-sm">
+                    <span th:each="i : ${#numbers.sequence(1, 5)}" th:text="${i <= feedback.rating ? '★' : '☆'}"></span>
+                  </div>
+                </div>
+                <span class="text-3xs text-gray-400 font-semibold" th:text="${#temporals.format(feedback.submissionTime, 'dd MMM yyyy, hh:mm a')}">
+                  17 Jun 2026, 10:00 AM
+                </span>
+              </div>
+              
+              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-wrap" th:text="${feedback.message}">
+                Feedback body content...
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script th:fragment="script">
+    document.addEventListener("DOMContentLoaded", () => {
+      const stars = document.querySelectorAll(".star-btn");
+      const input = document.getElementById("rating-input");
+      const resetBtn = document.getElementById("reset-btn");
+
+      function updateStars(ratingValue) {
+        stars.forEach(star => {
+          const val = parseInt(star.getAttribute("data-val"));
+          if (val <= ratingValue) {
+            star.classList.remove("text-gray-300", "dark:text-gray-750");
+            star.classList.add("text-amber-400");
+          } else {
+            star.classList.remove("text-amber-400");
+            star.classList.add("text-gray-300", "dark:text-gray-750");
+          }
+        });
+      }
+
+      // Initialize
+      const initialVal = parseInt(input.value) || 5;
+      input.value = initialVal;
+      updateStars(initialVal);
+
+      stars.forEach(star => {
+        star.addEventListener("click", () => {
+          const val = star.getAttribute("data-val");
+          input.value = val;
+          updateStars(parseInt(val));
+        });
+      });
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          setTimeout(() => {
+            input.value = 5;
+            updateStars(5);
+          }, 50);
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -22,7 +22,7 @@ target/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
-/dist/
+
 /nbdist/
 /.nb-gradle/
 build/
@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+mysql_data/
+keyfile.txt
+
+# Dependency packages and build targets
+node_modules/
+dist/
+.DS_Store
+target/

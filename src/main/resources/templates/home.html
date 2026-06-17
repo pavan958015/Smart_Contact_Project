@@ -1,15 +1,240 @@
 <!DOCTYPE html>
 <html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
 <head>
-    <title>Home Page</title>
+  <title>Home | SCM 2.0</title>
 </head>
+
 <body>
-    <div id="content">
-        <h1>Welcome to Home Page</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore, sequi!</p>
-    </div>
-    <script>
-        console.log("This is Home page");
-    </script>
+
+  <div id="content">
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden min-h-[90vh] flex items-center bg-gradient-to-b from-emerald-50/20 via-white to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 py-16">
+
+      <!-- Background Glows -->
+      <div class="absolute top-1/4 left-10 w-96 h-96 bg-emerald-400/10 dark:bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div class="absolute bottom-1/4 right-10 w-[450px] h-[450px] bg-teal-400/10 dark:bg-teal-500/5 rounded-full blur-[150px] pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center w-full relative z-10">
+
+        <!-- LEFT SIDE -->
+        <div class="lg:col-span-7 space-y-6 text-left">
+
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100/80 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-semibold text-xs tracking-wider uppercase border border-emerald-200/50 dark:border-emerald-800/30 animate-pulse">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            SCM 2.0 Cloud Platform
+          </div>
+
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
+            Manage Your 
+            <span class="text-emerald-600 dark:text-emerald-400">
+              Contacts
+            </span>
+            Smarter.
+          </h1>
+
+          <p class="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-xl leading-relaxed">
+            A beautiful, secure, and modern cloud platform to organize, explore, and communicate with your network in real-time.
+          </p>
+
+          <div class="flex flex-wrap gap-4 pt-4">
+            <a th:href="@{/register}"
+              class="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-2xl font-bold shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
+            >
+              Get Started Free
+              <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+
+            <a th:href="@{/about}"
+              class="px-8 py-4 border border-gray-300 dark:border-gray-700 rounded-2xl font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-300"
+            >
+              Learn More
+            </a>
+          </div>
+
+        </div>
+
+        <!-- RIGHT SIDE IMAGE -->
+        <div class="lg:col-span-5 flex justify-center relative">
+          <!-- decorative circle behind image -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-full blur-[100px] opacity-10 dark:opacity-20 animate-pulse"></div>
+          
+          <img th:src="@{/images/HomeAI.png}" src="/images/HomeAI.png" alt="SCM Dashboard"
+            class="relative w-full max-w-md md:max-w-lg rounded-3xl shadow-2xl shadow-emerald-950/10 border border-gray-200/50 dark:border-gray-800/50 hover:scale-[1.02] transition-transform duration-500 ease-out"
+            onerror="this.style.display='none'; document.getElementById('placeholder-hero-img').style.display='flex';"
+          />
+          
+          <!-- fallback elegant illustration if image is missing -->
+          <div id="placeholder-hero-img" class="hidden w-80 h-80 rounded-3xl bg-gradient-to-tr from-emerald-500/10 to-teal-500/20 dark:from-emerald-950/20 dark:to-teal-900/30 border border-emerald-500/20 flex-col items-center justify-center gap-4 text-emerald-600 dark:text-emerald-400">
+            <i class="fa-regular fa-address-book text-7xl animate-bounce"></i>
+            <span class="font-semibold text-lg">Smart Contact Manager</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- FEATURES -->
+    <section class="py-24 bg-gray-50 dark:bg-gray-950 border-y border-gray-100 dark:border-gray-900">
+
+      <div class="max-w-7xl mx-auto px-6">
+
+        <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider text-sm">Key Modules</span>
+          <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+            Designed for Simplicity and Power
+          </h2>
+          <p class="text-gray-500 dark:text-gray-400">
+            SCM 2.0 comes packed with premium tools to help you stay connected effortlessly.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+
+          <!-- Card 1 -->
+          <div class="group bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-sm hover:shadow-xl border border-gray-100 dark:border-gray-850 hover:border-emerald-500/20 dark:hover:border-emerald-500/20 transition-all duration-300 hover:-translate-y-1">
+
+            <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300">
+              📇
+            </div>
+
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+              Smart Contacts
+            </h3>
+
+            <p class="text-gray-650 dark:text-gray-400 leading-relaxed text-sm">
+              Add, tag, edit, and organize contacts instantly. Search with auto-complete options through an intuitive UI.
+            </p>
+
+          </div>
+
+          <!-- Card 2 -->
+          <div class="group bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-sm hover:shadow-xl border border-gray-100 dark:border-gray-850 hover:border-teal-500/20 dark:hover:border-teal-500/20 transition-all duration-300 hover:-translate-y-1">
+
+            <div class="w-14 h-14 rounded-2xl bg-teal-100 dark:bg-teal-950/60 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300">
+              💬
+            </div>
+
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+              Direct Messaging
+            </h3>
+
+            <p class="text-gray-650 dark:text-gray-400 leading-relaxed text-sm">
+              Initiate messages or emails directly to your contact lists with pre-made communication hooks.
+            </p>
+
+          </div>
+
+          <!-- Card 3 -->
+          <div class="group bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-sm hover:shadow-xl border border-gray-100 dark:border-gray-850 hover:border-emerald-500/20 dark:hover:border-emerald-500/20 transition-all duration-300 hover:-translate-y-1">
+
+            <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300">
+              🔒
+            </div>
+
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+              Encrypted Sync
+            </h3>
+
+            <p class="text-gray-650 dark:text-gray-400 leading-relaxed text-sm">
+              Your connection catalogs are strictly private, secured with JWT/Spring Security and safely stored.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="py-24 bg-white dark:bg-gray-900">
+
+      <div class="max-w-6xl mx-auto px-6">
+
+        <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+          <span class="text-teal-600 dark:text-teal-400 font-bold uppercase tracking-wider text-sm">Getting Started</span>
+          <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+            Simple 3-Step Setup
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-12 relative">
+          
+          <!-- Step 1 -->
+          <div class="text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold mx-auto shadow-lg shadow-emerald-600/20">
+              1
+            </div>
+            <h3 class="font-extrabold text-xl text-gray-900 dark:text-white">
+              Create Account
+            </h3>
+            <p class="text-gray-555 dark:text-gray-450 text-sm max-w-xs mx-auto">
+              Sign up securely using password or instant Google / GitHub SSO integrations.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold mx-auto shadow-lg shadow-emerald-600/20">
+              2
+            </div>
+            <h3 class="font-extrabold text-xl text-gray-900 dark:text-white">
+              Add Contacts
+            </h3>
+            <p class="text-gray-555 dark:text-gray-450 text-sm max-w-xs mx-auto">
+              Quickly create contacts, upload profile pictures (via Cloudinary), and save details.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold mx-auto shadow-lg shadow-emerald-600/20">
+              3
+            </div>
+            <h3 class="font-extrabold text-xl text-gray-900 dark:text-white">
+              Stay Connected
+            </h3>
+            <p class="text-gray-555 dark:text-gray-450 text-sm max-w-xs mx-auto">
+              Filter by favorites, search by categories, and navigate links instantly.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CTA -->
+    <section class="relative bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-750 dark:to-teal-750 text-white py-20 overflow-hidden">
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div class="max-w-4xl mx-auto text-center px-6 relative z-10 space-y-6">
+        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+          Ready to Clean Up Your Contact Mess?
+        </h2>
+        <p class="text-lg md:text-xl text-emerald-100 max-w-xl mx-auto">
+          Create a free account now and start managing contacts the smart way.
+        </p>
+        <div class="pt-4">
+          <a th:href="@{/register}" 
+             class="inline-block bg-white hover:bg-gray-150 text-emerald-700 font-bold px-8 py-4 rounded-2xl shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
+          >
+            Create Your Free Account
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script th:fragment="script">
+    console.log("SCM 2.0 Home Loaded");
+  </script>
+
 </body>
+
 </html>

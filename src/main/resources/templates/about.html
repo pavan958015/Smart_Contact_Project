@@ -1,15 +1,190 @@
 <!DOCTYPE html>
 <html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
 <head>
-    <title>About Page</title>
+  <title>About | SCM 2.0</title>
 </head>
+
 <body>
-    <div id="content">
-        <h1>Welcome to about Page</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore, sequi!</p>
-    </div>
-    <script>
-        console.log("This is about page");
-    </script>
+
+  <div id="content">
+
+    <!-- Hero Section -->
+    <section
+      class="relative overflow-hidden bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 py-24 px-6">
+
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-green-200 dark:bg-green-900 rounded-full opacity-20 blur-3xl">
+      </div>
+
+      <div
+        class="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-200 dark:bg-blue-900 rounded-full opacity-20 blur-3xl">
+      </div>
+
+      <div class="relative max-w-5xl mx-auto text-center">
+
+        <span
+          class="inline-block px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 text-sm font-semibold mb-5">
+          ABOUT SCM 2.0
+        </span>
+
+        <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6">
+
+          Smart Contact
+          <span class="text-green-600">
+            Management
+          </span>
+
+          For Everyone
+        </h1>
+
+        <p class="text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+
+          SCM 2.0 is a modern contact management platform built with
+          Spring Boot, Thymeleaf, Tailwind CSS and MySQL. It helps
+          users organize, manage and communicate with their contacts
+          efficiently.
+        </p>
+
+      </div>
+
+    </section>
+
+    <!-- Features -->
+    <section class="py-24 bg-gray-50 dark:bg-gray-900">
+
+      <div class="max-w-7xl mx-auto px-6">
+
+        <div class="text-center mb-14">
+
+          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Why Choose SCM 2.0 ?
+          </h2>
+
+          <p class="text-gray-500 dark:text-gray-400">
+            Powerful features to simplify contact management.
+          </p>
+
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow hover:shadow-lg transition">
+
+            <div class="text-5xl mb-5">📇</div>
+
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              Smart Contacts
+            </h3>
+
+            <p class="text-gray-500 dark:text-gray-400">
+              Store and organize all your contacts with ease.
+            </p>
+
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow hover:shadow-lg transition">
+
+            <div class="text-5xl mb-5">💬</div>
+
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              Direct Messaging
+            </h3>
+
+            <p class="text-gray-500 dark:text-gray-400">
+              Communicate with contacts directly from SCM.
+            </p>
+
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow hover:shadow-lg transition">
+
+            <div class="text-5xl mb-5">🔒</div>
+
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              Secure & Private
+            </h3>
+
+            <p class="text-gray-500 dark:text-gray-400">
+              Your data is encrypted and completely secure.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Team -->
+    <section class="py-24 bg-white dark:bg-gray-800">
+
+      <div class="max-w-6xl mx-auto px-6">
+
+        <div class="text-center mb-16">
+
+          <h2 class="text-4xl font-bold text-gray-900 dark:text-white">
+            Meet The Developer
+          </h2>
+
+        </div>
+
+        <div class="flex justify-center">
+
+          <div class="bg-gray-50 dark:bg-gray-900 p-10 rounded-3xl shadow-lg text-center max-w-md">
+
+            <img src="https://ui-avatars.com/api/?name=Pavan+Soni&background=16a34a&color=fff&size=200"
+              class="w-28 h-28 rounded-full mx-auto mb-6">
+
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+              Pavan Soni
+            </h3>
+
+            <p class="text-green-600 font-semibold mt-2">
+              Full Stack Java Developer
+            </p>
+
+            <p class="text-gray-500 dark:text-gray-400 mt-4">
+              Creator of SCM 2.0 built using Spring Boot,
+              Thymeleaf, Tailwind CSS and MySQL.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 bg-gradient-to-r from-green-500 to-green-600 text-white">
+
+      <div class="max-w-4xl mx-auto text-center px-6">
+
+        <h2 class="text-4xl font-bold mb-5">
+          Ready To Manage Contacts Smarter?
+        </h2>
+
+        <p class="mb-8 text-green-100">
+          Join SCM 2.0 and organize your contacts effortlessly.
+        </p>
+
+        <a th:href="@{/register}"
+          class="inline-block bg-white text-green-600 px-8 py-4 rounded-2xl font-bold shadow-lg">
+          Get Started
+        </a>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <script th:fragment="script">
+    console.log("About page loaded");
+  </script>
+
 </body>
+
 </html>

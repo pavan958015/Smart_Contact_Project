@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
+<head>
+  <title>Direct Mail Outbox | SCM 2.0</title>
+</head>
+
+<body>
+  <div id="content">
+    
+    <!-- Sidebar Fragment -->
+    <div th:if="${loggedInUser}">
+      <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="sm:pl-64 pt-20 min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white transition-all duration-300">
+      <div class="max-w-4xl mx-auto px-6 py-10 space-y-8">
+        
+        <!-- Page Header -->
+        <div class="space-y-2">
+          <h1 class="text-3xl font-extrabold tracking-tight">Direct Mail Outbox</h1>
+          <p class="text-xs text-gray-400">Compose and send emails to your database contacts directly through SCM 2.0.</p>
+        </div>
+
+        <!-- Compose Email Form -->
+        <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 rounded-3xl shadow-xl p-8 transition duration-300">
+          
+          <div data-th-replace="~{message :: messagebox}"></div>
+          
+          <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i class="fa-regular fa-paper-plane text-emerald-500"></i>
+            Compose Direct Email
+          </h2>
+
+          <div th:if="${#lists.isEmpty(contacts)}" class="text-center p-8 bg-amber-50/50 dark:bg-amber-950/10 rounded-2xl border border-amber-500/20 text-amber-600 dark:text-amber-400 text-sm">
+            <i class="fa-solid fa-triangle-exclamation text-3xl block mb-2"></i>
+            You have no contacts in your catalog. Add contacts first to be able to send them direct emails!
+            <div class="mt-4">
+              <a th:href="@{/user/contacts/add}" class="inline-block px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition">
+                Add Contact Now
+              </a>
+            </div>
+          </div>
+
+          <form th:unless="${#lists.isEmpty(contacts)}" data-th-object="${directMessageForm}" th:action="@{/user/direct-message}" method="POST" class="space-y-5">
+            
+            <!-- Contact Select -->
+            <div class="space-y-1">
+              <label for="recipientEmail" class="block text-sm font-semibold text-gray-755 dark:text-gray-300">Recipient Contact</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
+                  <i class="fa-regular fa-address-book"></i>
+                </div>
+                <select th:field="*{recipientEmail}" id="recipientEmail" required
+                        class="pl-10 block w-full p-3 text-sm text-gray-900 bg-gray-50/50 rounded-xl border border-gray-200/80 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-800/50 dark:border-gray-700 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500">
+                  <option value="" selected>Select Contact Recipient</option>
+                  <option th:each="c : ${contacts}" th:value="${c.email}" th:text="${c.name} + ' (' + ${c.email} + ')'"></option>
+                </select>
+              </div>
+              <p class="text-red-500 text-xs mt-1" data-th-if="${#fields.hasErrors('recipientEmail')}" data-th-errors="*{recipientEmail}"></p>
+            </div>
+
+            <!-- Subject Field -->
+            <div class="space-y-1">
+              <label for="subject" class="block text-sm font-semibold text-gray-755 dark:text-gray-300">Subject</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
+                  <i class="fa-solid fa-heading"></i>
+                </div>
+                <input type="text" th:field="*{subject}" id="subject" required
+                       class="pl-10 block w-full p-3 text-sm text-gray-900 bg-gray-50/50 rounded-xl border border-gray-200/80 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-800/50 dark:border-gray-700 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500" 
+                       placeholder="Email subject..." />
+              </div>
+              <p class="text-red-500 text-xs mt-1" data-th-if="${#fields.hasErrors('subject')}" data-th-errors="*{subject}"></p>
+            </div>
+
+            <!-- Message Body Field -->
+            <div class="space-y-1">
+              <label for="body" class="block text-sm font-semibold text-gray-755 dark:text-gray-300">Message Body</label>
+              <textarea th:field="*{body}" id="body" rows="6" required
+                        class="block w-full p-3 text-sm text-gray-900 bg-gray-50/50 rounded-xl border border-gray-200/80 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-800/50 dark:border-gray-700 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500" 
+                        placeholder="Write your email content in detail here..."></textarea>
+              <p class="text-red-500 text-xs mt-1" data-th-if="${#fields.hasErrors('body')}" data-th-errors="*{body}"></p>
+            </div>
+
+            <!-- Action Button -->
+            <button type="submit" 
+                    class="w-full text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 font-bold rounded-xl text-sm px-5 py-3.5 text-center transition duration-300 shadow-md hover:shadow-lg">
+              Send Email Outbox
+            </button>
+
+          </form>
+
+        </div>
+
+        <!-- Sent Logs (Outbox) History -->
+        <div class="space-y-4">
+          <h2 class="text-xl font-bold flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-emerald-500"></i>
+            Sent Message History
+          </h2>
+
+          <div th:if="${#lists.isEmpty(messages)}" class="text-center p-10 bg-white/50 dark:bg-gray-900/50 rounded-3xl border border-dashed border-gray-200/50 dark:border-gray-800/50 text-gray-400 text-sm">
+            <i class="fa-regular fa-folder-open text-4xl block mb-3 text-gray-300"></i>
+            Your sent outbox log is empty. Try dispatching a mail message above!
+          </div>
+
+          <div th:unless="${#lists.isEmpty(messages)}" class="space-y-4">
+            <div th:each="msg : ${messages}" class="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm p-6 rounded-2xl border border-gray-200/40 dark:border-gray-800/40 shadow-sm space-y-3">
+              <div class="flex flex-wrap justify-between items-start gap-2">
+                <div class="space-y-1">
+                  <span class="px-2 py-0.5 text-3xs font-extrabold uppercase bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-400 rounded-md border border-emerald-500/10">
+                    Sent
+                  </span>
+                  <h3 class="font-extrabold text-base text-gray-950 dark:text-white" th:text="${msg.subject}">Subject</h3>
+                  <p class="text-xs text-gray-450 dark:text-gray-400" th:text="'To: ' + ${msg.recipientEmail}">recipient@example.com</p>
+                </div>
+                <span class="text-3xs text-gray-400 font-semibold" th:text="${#temporals.format(msg.sentTime, 'dd MMM yyyy, hh:mm a')}">
+                  17 Jun 2026, 10:00 AM
+                </span>
+              </div>
+              
+              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-wrap" th:text="${msg.body}">
+                Message body content...
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script th:fragment="script">
+    console.log("Direct Message outbox page loaded");
+  </script>
+</body>
+
+</html>

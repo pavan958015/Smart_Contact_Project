@@ -1,15 +1,187 @@
 <!DOCTYPE html>
 <html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+
 <head>
-    <title>services</title>
+  <title>Services | SCM 2.0</title>
 </head>
+
 <body>
-    <section id="content">
-        <h1>Welcome to service Page</h1>
-        <h2>service Offered by me</h2>
+
+  <div id="content">
+
+    <!-- HERO -->
+    <section
+      class="relative overflow-hidden py-24 px-6 bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+
+      <div class="max-w-5xl mx-auto text-center">
+
+        <span
+          class="inline-block px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 text-sm font-semibold mb-5">
+          Our Services
+        </span>
+
+        <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6">
+
+          Tools built for
+          <span class="text-green-600">
+            real connections.
+          </span>
+
+        </h1>
+
+        <p class="text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-8">
+
+          SCM2.0 offers a complete suite of contact management services —
+          from organizing your network to messaging in real time.
+
+        </p>
+
+        <a th:href="@{/register}"
+          class="inline-block px-8 py-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold shadow-lg transition">
+          Get Started Free →
+        </a>
+
+      </div>
+
     </section>
-    <script>
-        console.log("This is services page");
-    </script>
+
+    <!-- FEATURES -->
+    <section class="py-24 px-6 bg-white dark:bg-gray-900">
+
+      <div class="max-w-7xl mx-auto">
+
+        <div class="text-center mb-14">
+
+          <h2 class="text-4xl font-bold mb-4">
+            What we offer
+          </h2>
+
+          <p class="text-gray-500 dark:text-gray-400">
+            Every feature is designed to make your contact life simpler and more productive.
+          </p>
+
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          <!-- Contact Management -->
+          <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-3xl shadow hover:shadow-xl transition">
+            <div class="text-5xl mb-5">📇</div>
+            <h3 class="text-2xl font-bold mb-4">Contact Management</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-5">
+              Add, edit and organize unlimited contacts.
+            </p>
+            <ul class="space-y-2 text-sm">
+              <li>✓ Unlimited contacts</li>
+              <li>✓ CSV import/export</li>
+              <li>✓ Custom tags & categories</li>
+            </ul>
+          </div>
+
+          <!-- Messaging -->
+          <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-3xl shadow hover:shadow-xl transition">
+            <div class="text-5xl mb-5">💬</div>
+            <h3 class="text-2xl font-bold mb-4">Direct Messaging</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-5">
+              Message contacts directly inside SCM.
+            </p>
+            <ul class="space-y-2 text-sm">
+              <li>✓ Real-time messaging</li>
+              <li>✓ Message history</li>
+              <li>✓ Unread notifications</li>
+            </ul>
+          </div>
+
+          <!-- Profile -->
+          <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-3xl shadow hover:shadow-xl transition">
+            <div class="text-5xl mb-5">👤</div>
+            <h3 class="text-2xl font-bold mb-4">Profile Management</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-5">
+              Customize your profile and privacy settings.
+            </p>
+            <ul class="space-y-2 text-sm">
+              <li>✓ Profile photo upload</li>
+              <li>✓ Bio & social links</li>
+              <li>✓ Privacy controls</li>
+            </ul>
+          </div>
+
+          <!-- Dashboard -->
+          <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-3xl shadow hover:shadow-xl transition">
+            <div class="text-5xl mb-5">📊</div>
+            <h3 class="text-2xl font-bold mb-4">Analytics Dashboard</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-5">
+              Monitor contacts and activity.
+            </p>
+            <ul class="space-y-2 text-sm">
+              <li>✓ Contact growth stats</li>
+              <li>✓ Message activity</li>
+              <li>✓ Profile view tracking</li>
+            </ul>
+          </div>
+
+          <!-- Cloud -->
+          <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-3xl shadow hover:shadow-xl transition">
+            <div class="text-5xl mb-5">☁️</div>
+            <h3 class="text-2xl font-bold mb-4">Cloud Sync</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-5">
+              Access contacts anywhere.
+            </p>
+            <ul class="space-y-2 text-sm">
+              <li>✓ Auto backup</li>
+              <li>✓ Multi-device access</li>
+              <li>✓ Real-time sync</li>
+            </ul>
+          </div>
+
+          <!-- Security -->
+          <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-3xl shadow hover:shadow-xl transition">
+            <div class="text-5xl mb-5">🔒</div>
+            <h3 class="text-2xl font-bold mb-4">Security & Privacy</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-5">
+              Enterprise-grade protection.
+            </p>
+            <ul class="space-y-2 text-sm">
+              <li>✓ AES-256 encryption</li>
+              <li>✓ OAuth login</li>
+              <li>✓ GDPR compliant</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 bg-green-600 text-white text-center">
+
+      <div class="max-w-4xl mx-auto px-6">
+
+        <h2 class="text-5xl font-bold mb-5">
+          Ready to get started?
+        </h2>
+
+        <p class="text-green-100 mb-8">
+          Join thousands of users already using SCM 2.0.
+        </p>
+
+        <a th:href="@{/register}"
+          class="inline-block px-8 py-4 bg-white text-green-600 rounded-2xl font-bold shadow-lg">
+          Create Free Account →
+        </a>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <script th:fragment="script">
+    console.log("services page loaded");
+  </script>
+
 </body>
+
 </html>
