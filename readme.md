@@ -130,3 +130,56 @@ The script will show current `git status`, ask you for a commit message (with a 
 
 ## 🎨 Excalidraw design links
 [SCM Architecture Canvas](https://excalidraw.com/#json=SIuQrQnGQr9DGkCVc8BWD,JqVceoohF0UsTfllkzdRmw)
+
+---
+
+## ☁️ AWS Elastic Beanstalk Deployment
+
+The application is deployed to **AWS Elastic Beanstalk** on a **Java SE platform (Corretto 21)** and connects to an external **Amazon RDS MySQL** database.
+
+### 1. Build and Package instructions
+To deploy the application, you need to compile tailwind styles, package the JAR, and create a deployment zip:
+```powershell
+# Compile Tailwind stylesheet
+npx tailwindcss -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css
+
+# Build clean production executable JAR
+./mvnw clean package -DskipTests
+
+# Copy JAR to root folder
+copy target\scm2.0-0.0.1-SNAPSHOT.jar scm2.0.jar
+
+# Create flat ZIP file scm2.0-deployment.zip containing Procfile and scm2.0.jar
+powershell -Command "Compress-Archive -Path Procfile, scm2.0.jar -DestinationPath scm2.0-deployment.zip -Force"
+```
+
+### 2. Environment Properties configuration in Elastic Beanstalk
+
+Configure the following Environment properties on Elastic Beanstalk console under **Software/Configuration**:
+
+| Key | Example Value | Description |
+| :--- | :--- | :--- |
+| `SERVER_PORT` | `5000` | Port on which Nginx reverse proxies traffic to Spring Boot |
+| `SPRING_PROFILES_ACTIVE` | `prod` | Activates production configuration |
+| `MYSQL_HOST` | `scm-db.cbq80wao2479.ap-south-1.rds.amazonaws.com` | RDS Endpoint host |
+| `MYSQL_PORT` | `3306` | RDS database port |
+| `MYSQL_DB` | `scm20` | Database name |
+| `MYSQL_USER` | `admin` | RDS Master username |
+| `MYSQL_PASSWORD` | `Pavan9580` | RDS Master password (case sensitive!) |
+| `GOOGLE_CLIENT_ID` | `xxxx` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | `xxxx` | Google OAuth client secret |
+| `GITHUB_CLIENT_ID` | `xxxx` | GitHub OAuth client ID |
+| `GITHUB_CLIENT_SECRET` | `xxxx` | GitHub OAuth client secret |
+| `CLOUDINARY_API_KEY` | `xxxx` | Cloudinary API Key |
+| `CLOUDINARY_API_SECRET` | `xxxx` | Cloudinary API Secret |
+| `CLOUDINARY_CLOUD_NAME` | `xxxx` | Cloudinary Cloud Name |
+| `MAIL_USERNAME` | `xxxx@gmail.com` | Gmail SMTP username |
+| `MAIL_PASSWORD` | `xxxx` | Gmail App password |
+
+### 3. Key Troubleshooting Steps
+- **Database Auto-Creation**: The connection URL is configured with `?createDatabaseIfNotExist=true` to automatically create the database schema `scm20` on RDS if it doesn't exist during startup.
+- **Port Matching**: AWS Elastic Beanstalk defaults to routing traffic to port `5000`. Spring Boot is configured to listen on port `5000` via `SERVER_PORT=5000` in the environment variables and `Procfile`.
+- **OAuth Callback Configuration**: Make sure to whitelist the Elastic Beanstalk URL in the OAuth configurations:
+  - Google: Add `http://<YOUR_EB_URL>/login/oauth2/code/google` to **Authorized redirect URIs**.
+  - GitHub: Add `http://<YOUR_EB_URL>/login/oauth2/code/github` to **Authorization callback URL**.
+
