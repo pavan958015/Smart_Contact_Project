@@ -66,7 +66,7 @@ public class DirectMessageController {
         try {
             // 1. Send Email
             directMessageService.sendMessageEmail(
-                    username,
+                    user.getName() + " <" + username + ">",
                     directMessageForm.getRecipientEmail(),
                     directMessageForm.getSubject(),
                     directMessageForm.getBody()

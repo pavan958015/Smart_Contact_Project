@@ -68,6 +68,8 @@ public class User implements UserDetails {
 
     private String emailToken;
 
+    private String passwordResetToken;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // list of roles[USER,ADMIN]

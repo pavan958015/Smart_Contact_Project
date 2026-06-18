@@ -80,6 +80,11 @@
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                 />
+                <div class="text-right mt-1.5">
+                  <a th:href="@{'/forgot-password'}" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 hover:underline">
+                    Forgot Password?
+                  </a>
+                </div>
                 <!-- <p
                   data-th-if="${#fields.hasErrors('password')}"
                   data-th-errors="*{password}"

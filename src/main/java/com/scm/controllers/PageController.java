@@ -25,6 +25,18 @@ public class PageController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private com.scm.repsitories.UserRepo userRepo;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private com.scm.services.EmailService emailService;
+
+    @Autowired
+    private com.scm.helpers.Helper helper;
+
     @GetMapping("/")
     public String index() {
         return "redirect:/home";
@@ -146,6 +158,104 @@ public class PageController {
 
         // redirectto login page
         return "redirect:/register";
+    }
+
+    // Forgot password view
+    @GetMapping("/forgot-password")
+    public String forgotPasswordView() {
+        return "forgot_password";
+    }
+
+    // Process forgot password request
+    @RequestMapping(value = "/forgot-password", method = RequestMethod.POST)
+    public String processForgotPassword(
+            @org.springframework.web.bind.annotation.RequestParam("email") String email,
+            HttpSession session) {
+
+        java.util.Optional<User> userOptional = userRepo.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            String token = java.util.UUID.randomUUID().toString();
+            user.setPasswordResetToken(token);
+            userRepo.save(user);
+
+            // Construct link
+            String resetLink = helper.getLinkForEmailVerificatiton(token).replace("/auth/verify-email", "/reset-password");
+            try {
+                emailService.sendEmail(user.getEmail(), "Reset Password : Smart Contact Manager",
+                        "Please click the link below to reset your password:\n\n" + resetLink);
+                session.setAttribute("message", Message.builder()
+                        .content("Password reset link has been sent to your email ID!")
+                        .type(MessageType.green)
+                        .build());
+            } catch (Exception e) {
+                session.setAttribute("message", Message.builder()
+                        .content("Failed to send reset email. Please try again.")
+                        .type(MessageType.red)
+                        .build());
+            }
+        } else {
+            session.setAttribute("message", Message.builder()
+                    .content("No account found with this email ID.")
+                    .type(MessageType.red)
+                    .build());
+        }
+
+        return "redirect:/forgot-password";
+    }
+
+    // Reset password view
+    @GetMapping("/reset-password")
+    public String resetPasswordView(@org.springframework.web.bind.annotation.RequestParam("token") String token, Model model, HttpSession session) {
+        java.util.Optional<User> userOptional = userRepo.findByPasswordResetToken(token);
+        if (userOptional.isEmpty()) {
+            session.setAttribute("message", Message.builder()
+                    .content("Invalid or expired password reset token.")
+                    .type(MessageType.red)
+                    .build());
+            return "redirect:/login";
+        }
+        model.addAttribute("token", token);
+        return "reset_password";
+    }
+
+    // Process reset password
+    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+    public String processResetPassword(
+            @org.springframework.web.bind.annotation.RequestParam("token") String token,
+            @org.springframework.web.bind.annotation.RequestParam("password") String password,
+            @org.springframework.web.bind.annotation.RequestParam("confirmPassword") String confirmPassword,
+            HttpSession session) {
+
+        if (!password.equals(confirmPassword)) {
+            session.setAttribute("message", Message.builder()
+                    .content("Passwords do not match.")
+                    .type(MessageType.red)
+                    .build());
+            return "redirect:/reset-password?token=" + token;
+        }
+
+        java.util.Optional<User> userOptional = userRepo.findByPasswordResetToken(token);
+        if (userOptional.isEmpty()) {
+            session.setAttribute("message", Message.builder()
+                    .content("Invalid or expired token.")
+                    .type(MessageType.red)
+                    .build());
+            return "redirect:/login";
+        }
+
+        User user = userOptional.get();
+        user.setPassword(passwordEncoder.encode(password));
+        user.setPasswordResetToken(null);
+        userRepo.save(user);
+
+        session.setAttribute("message", Message.builder()
+                .content("Password reset successful! You can now log in with your new password.")
+                .type(MessageType.green)
+                .build());
+
+        return "redirect:/login";
     }
 
 }

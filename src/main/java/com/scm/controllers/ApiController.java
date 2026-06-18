@@ -48,7 +48,7 @@ public class ApiController {
 
         try {
             // Send email to support email, from support email, with Reply-To set to the sender's email
-            emailService.sendEmail(supportEmail, form.getEmail(), supportEmail, "[SCM Support Request] " + form.getSubject(), emailBody);
+            emailService.sendEmail(form.getName() + " <" + form.getEmail() + ">", form.getEmail(), supportEmail, "[SCM Support Request] " + form.getSubject(), emailBody);
             return ResponseEntity.ok(Map.of("success", true, "message", "Your message has been sent successfully."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
