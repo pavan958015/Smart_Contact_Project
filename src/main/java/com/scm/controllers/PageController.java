@@ -106,6 +106,10 @@ public class PageController {
         System.out.println(userForm);
 
         // validate form data
+        if (userService.isUserExistByEmail(userForm.getEmail())) {
+            rBindingResult.rejectValue("email", "email.exists", "This email address is already in use.");
+        }
+
         if (rBindingResult.hasErrors()) {
             return "register";
         }

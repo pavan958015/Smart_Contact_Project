@@ -183,3 +183,30 @@ Configure the following Environment properties on Elastic Beanstalk console unde
   - Google: Add `http://<YOUR_EB_URL>/login/oauth2/code/google` to **Authorized redirect URIs**.
   - GitHub: Add `http://<YOUR_EB_URL>/login/oauth2/code/github` to **Authorization callback URL**.
 
+---
+
+## 🖥️ Desktop Executable Wrapper (Windows)
+
+The AWS Elastic Beanstalk web application has been successfully packaged into a standalone Windows Desktop application using **Nativefier**.
+
+### 1. Build and Package Desktop App
+To rebuild the executable wrapper with a custom icon (Note: Windows needs a `.ico` format for the icon):
+```powershell
+npx nativefier --name "SmartContactManager" --platform "win32" --arch "x64" --icon "path/to/your/icon.ico" "http://scm-pavan-210129.ap-south-1.elasticbeanstalk.com/"
+```
+*Note: If script execution is disabled on your Windows PowerShell, use `npx.cmd` instead of `npx`:*
+```powershell
+npx.cmd --yes nativefier --name "SmartContactManager" --platform "win32" --arch "x64" --icon "c:\Users\Pavan Soni\Downloads\scm2.0-main_Final\scm2.0-main\src\main\resources\static\images\telephone.ico" "http://scm-pavan-210129.ap-south-1.elasticbeanstalk.com/"
+```
+
+### 2. Location of Built Files
+The generated build outputs are located in:
+`C:\Users\Pavan Soni\Downloads\scm2.0-main_Final\SmartContactManager-win32-x64\`
+
+### 3. How to Run
+Double-click the **`SmartContactManager.exe`** file inside the folder above. It will launch the application in a borderless app window without needing a browser tab.
+
+> [!NOTE]
+> Since this app is a wrapper for your AWS URL, an active internet connection is required on the user's machine to load and use the application.
+
+
