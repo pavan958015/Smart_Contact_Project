@@ -1,0 +1,20 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:Rahul Sharma
+EMAIL;TYPE=INTERNET:rahul.sharma@example.com
+TEL;TYPE=CELL:9876543210
+ADR;TYPE=HOME:;;123 Metro Road;New Delhi;;;India
+NOTE:Software Engineer
+URL:https://rahulsharma.dev
+URL:https://www.linkedin.com/in/rahul-sharma
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+FN:Priya Patel
+EMAIL;TYPE=INTERNET:priya.patel@example.com
+TEL;TYPE=CELL:9123456789
+ADR;TYPE=HOME:;;456 Ring Road;Mumbai;;;India
+NOTE:Product Manager
+URL:https://priyapatel.com
+END:VCARD

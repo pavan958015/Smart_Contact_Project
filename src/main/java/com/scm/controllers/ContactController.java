@@ -30,6 +30,14 @@ import com.scm.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.io.PrintWriter;
+
 @Controller
 @RequestMapping("/user/contacts")
 public class ContactController {
@@ -276,6 +284,253 @@ public class ContactController {
         model.addAttribute("message", Message.builder().content("Contact Updated !!").type(MessageType.green).build());
 
         return "redirect:/user/contacts/view/" + contactId;
+    }
+
+    @GetMapping("/import-export")
+    public String importExportView() {
+        return "user/import_export";
+    }
+
+    @PostMapping("/import")
+    public String importContacts(@RequestParam("file") MultipartFile file, Authentication authentication, HttpSession session) {
+        if (file.isEmpty()) {
+            session.setAttribute("message", Message.builder()
+                    .content("Please select a file to import.")
+                    .type(MessageType.red)
+                    .build());
+            return "redirect:/user/contacts/import-export";
+        }
+
+        String username = Helper.getEmailOfLoggedInUser(authentication);
+        User user = userService.getUserByEmail(username);
+        String filename = file.getOriginalFilename();
+        
+        int importedCount = 0;
+        try {
+            if (filename != null && filename.toLowerCase().endsWith(".csv")) {
+                // Parse CSV
+                try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+                    com.opencsv.CSVReader csvReader = new com.opencsv.CSVReader(reader);
+                    List<String[]> rows = csvReader.readAll();
+                    boolean isHeader = true;
+                    for (String[] row : rows) {
+                        if (isHeader) {
+                            isHeader = false;
+                            // Check if the first row is actually a header row
+                            if (row.length > 0 && row[0].trim().equalsIgnoreCase("Name")) {
+                                continue;
+                            }
+                        }
+                        
+                        if (row.length == 0 || (row.length == 1 && row[0].trim().isEmpty())) {
+                            continue;
+                        }
+                        
+                        Contact contact = new Contact();
+                        // Expected standard headers: Name, Email, Phone, Address, Description, Website, LinkedIn, Favorite
+                        if (row.length > 0) contact.setName(row[0].trim());
+                        if (row.length > 1) contact.setEmail(row[1].trim());
+                        if (row.length > 2) contact.setPhoneNumber(row[2].trim());
+                        if (row.length > 3) contact.setAddress(row[3].trim());
+                        if (row.length > 4) contact.setDescription(row[4].trim());
+                        if (row.length > 5) contact.setWebsiteLink(row[5].trim());
+                        if (row.length > 6) contact.setLinkedInLink(row[6].trim());
+                        if (row.length > 7) {
+                            contact.setFavorite("true".equalsIgnoreCase(row[7].trim()));
+                        }
+                        
+                        if (contact.getName() == null || contact.getName().trim().isEmpty()) {
+                            contact.setName("Imported CSV Contact");
+                        }
+                        
+                        contact.setUser(user);
+                        contactService.save(contact);
+                        importedCount++;
+                    }
+                }
+            } else if (filename != null && (filename.toLowerCase().endsWith(".vcf") || filename.toLowerCase().endsWith(".vcard"))) {
+                // Parse vCard
+                List<ezvcard.VCard> vcards = ezvcard.Ezvcard.parse(file.getInputStream()).all();
+                for (ezvcard.VCard vcard : vcards) {
+                    Contact contact = new Contact();
+                    
+                    // Name
+                    if (vcard.getFormattedName() != null) {
+                        contact.setName(vcard.getFormattedName().getValue());
+                    } else if (vcard.getStructuredName() != null) {
+                        String familyName = vcard.getStructuredName().getFamily();
+                        String givenName = vcard.getStructuredName().getGiven();
+                        contact.setName((givenName != null ? givenName : "") + " " + (familyName != null ? familyName : ""));
+                    }
+                    
+                    if (contact.getName() == null || contact.getName().trim().isEmpty()) {
+                        contact.setName("Imported vCard Contact");
+                    }
+                    
+                    // Email
+                    if (vcard.getEmails() != null && !vcard.getEmails().isEmpty()) {
+                        contact.setEmail(vcard.getEmails().get(0).getValue());
+                    }
+                    
+                    // Phone
+                    if (vcard.getTelephoneNumbers() != null && !vcard.getTelephoneNumbers().isEmpty()) {
+                        ezvcard.property.Telephone tel = vcard.getTelephoneNumbers().get(0);
+                        String phoneVal = tel.getText();
+                        if (phoneVal == null || phoneVal.isEmpty()) {
+                            if (tel.getUri() != null) {
+                                phoneVal = tel.getUri().toString();
+                            }
+                        }
+                        contact.setPhoneNumber(phoneVal);
+                    }
+                    
+                    // Address
+                    if (vcard.getAddresses() != null && !vcard.getAddresses().isEmpty()) {
+                        ezvcard.property.Address addr = vcard.getAddresses().get(0);
+                        if (addr.getLabel() != null) {
+                            contact.setAddress(addr.getLabel());
+                        } else {
+                            StringBuilder sb = new StringBuilder();
+                            if (addr.getStreetAddress() != null) sb.append(addr.getStreetAddress()).append(", ");
+                            if (addr.getLocality() != null) sb.append(addr.getLocality()).append(", ");
+                            if (addr.getRegion() != null) sb.append(addr.getRegion()).append(" ");
+                            if (addr.getPostalCode() != null) sb.append(addr.getPostalCode());
+                            String fullAddr = sb.toString().trim();
+                            if (fullAddr.endsWith(",")) {
+                                fullAddr = fullAddr.substring(0, fullAddr.length() - 1).trim();
+                            }
+                            contact.setAddress(fullAddr.isEmpty() ? null : fullAddr);
+                        }
+                    }
+                    
+                    // Description
+                    if (vcard.getNotes() != null && !vcard.getNotes().isEmpty()) {
+                        contact.setDescription(vcard.getNotes().get(0).getValue());
+                    }
+                    
+                    // Websites and Social
+                    if (vcard.getUrls() != null) {
+                        for (ezvcard.property.Url url : vcard.getUrls()) {
+                            String val = url.getValue();
+                            if (val != null) {
+                                if (val.contains("linkedin.com")) {
+                                    contact.setLinkedInLink(val);
+                                } else {
+                                    contact.setWebsiteLink(val);
+                                }
+                            }
+                        }
+                    }
+                    
+                    contact.setUser(user);
+                    contactService.save(contact);
+                    importedCount++;
+                }
+            } else {
+                session.setAttribute("message", Message.builder()
+                        .content("Unsupported file format. Please upload a .CSV or .VCF file.")
+                        .type(MessageType.red)
+                        .build());
+                return "redirect:/user/contacts/import-export";
+            }
+            
+            session.setAttribute("message", Message.builder()
+                    .content("Successfully imported " + importedCount + " contacts!")
+                    .type(MessageType.green)
+                    .build());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("message", Message.builder()
+                    .content("Error importing contacts: " + e.getMessage())
+                    .type(MessageType.red)
+                    .build());
+        }
+        
+        return "redirect:/user/contacts/import-export";
+    }
+
+    @GetMapping("/export/csv")
+    public void exportToCSV(Authentication authentication, HttpServletResponse response) {
+        String username = Helper.getEmailOfLoggedInUser(authentication);
+        User user = userService.getUserByEmail(username);
+        
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=\"contacts.csv\"");
+        
+        try (PrintWriter writer = response.getWriter();
+             com.opencsv.CSVWriter csvWriter = new com.opencsv.CSVWriter(writer)) {
+            
+            String[] header = {"Name", "Email", "Phone", "Address", "Description", "Website", "LinkedIn", "Favorite"};
+            csvWriter.writeNext(header);
+            
+            List<Contact> contacts = contactService.getByUserId(user.getUserId());
+            for (Contact contact : contacts) {
+                String[] data = {
+                    contact.getName() != null ? contact.getName() : "",
+                    contact.getEmail() != null ? contact.getEmail() : "",
+                    contact.getPhoneNumber() != null ? contact.getPhoneNumber() : "",
+                    contact.getAddress() != null ? contact.getAddress() : "",
+                    contact.getDescription() != null ? contact.getDescription() : "",
+                    contact.getWebsiteLink() != null ? contact.getWebsiteLink() : "",
+                    contact.getLinkedInLink() != null ? contact.getLinkedInLink() : "",
+                    String.valueOf(contact.isFavorite())
+                };
+                csvWriter.writeNext(data);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping("/export/vcard")
+    public void exportToVCard(Authentication authentication, HttpServletResponse response) {
+        String username = Helper.getEmailOfLoggedInUser(authentication);
+        User user = userService.getUserByEmail(username);
+        
+        response.setContentType("text/vcard");
+        response.setHeader("Content-Disposition", "attachment; filename=\"contacts.vcf\"");
+        
+        try (PrintWriter writer = response.getWriter()) {
+            List<Contact> contacts = contactService.getByUserId(user.getUserId());
+            for (Contact contact : contacts) {
+                ezvcard.VCard vcard = new ezvcard.VCard();
+                
+                vcard.setFormattedName(contact.getName());
+                
+                if (contact.getEmail() != null && !contact.getEmail().trim().isEmpty()) {
+                    vcard.addEmail(contact.getEmail());
+                }
+                
+                if (contact.getPhoneNumber() != null && !contact.getPhoneNumber().trim().isEmpty()) {
+                    vcard.addTelephoneNumber(contact.getPhoneNumber());
+                }
+                
+                if (contact.getAddress() != null && !contact.getAddress().trim().isEmpty()) {
+                    ezvcard.property.Address address = new ezvcard.property.Address();
+                    address.setStreetAddress(contact.getAddress());
+                    vcard.addAddress(address);
+                }
+                
+                if (contact.getDescription() != null && !contact.getDescription().trim().isEmpty()) {
+                    vcard.addNote(contact.getDescription());
+                }
+                
+                if (contact.getWebsiteLink() != null && !contact.getWebsiteLink().trim().isEmpty()) {
+                    vcard.addUrl(contact.getWebsiteLink());
+                }
+                
+                if (contact.getLinkedInLink() != null && !contact.getLinkedInLink().trim().isEmpty()) {
+                    vcard.addUrl(contact.getLinkedInLink());
+                }
+                
+                String vcardStr = ezvcard.Ezvcard.write(vcard).go();
+                writer.write(vcardStr);
+                writer.write("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

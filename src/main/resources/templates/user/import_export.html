@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+<head>
+  <title>Import & Export Contacts | SCM</title>
+</head>
+<body>
+  <div id="content">
+    <!-- Sidebar Fragment -->
+    <div th:if="${loggedInUser}">
+      <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="sm:pl-64 pt-20 min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white transition-all duration-300">
+      <div class="max-w-4xl mx-auto px-6 py-10">
+        
+        <!-- Page Header -->
+        <div class="mb-8 space-y-1">
+          <h1 class="text-3xl font-extrabold tracking-tight">Import & Export Contacts</h1>
+          <p class="text-xs text-gray-405 dark:text-gray-400">Easily upload contacts via vCard/CSV or export your catalog with one click.</p>
+        </div>
+
+        <div data-th-replace="~{message::messagebox}"></div>
+
+        <!-- Two Column/Cards Layout -->
+        <div class="grid md:grid-cols-2 gap-8">
+          
+          <!-- Import Contacts Card -->
+          <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 rounded-3xl shadow-xl p-8 space-y-6 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="p-3 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-2xl">
+                  <i class="fa-solid fa-file-import text-xl"></i>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold">Import Contacts</h2>
+                  <p class="text-xs text-gray-450 dark:text-gray-400">Bulk upload contacts into your account.</p>
+                </div>
+              </div>
+
+              <!-- Form for upload -->
+              <form id="importForm" th:action="@{'/user/contacts/import'}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <!-- File Drag and Drop -->
+                <div class="flex items-center justify-center w-full">
+                  <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-emerald-500 dark:hover:border-emerald-500 rounded-3xl cursor-pointer bg-gray-50/50 dark:bg-gray-950/20 hover:bg-emerald-50/10 dark:hover:bg-emerald-950/5 transition-all duration-200">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
+                      <i class="fa-solid fa-cloud-arrow-up text-3xl text-emerald-500 mb-3 animate-bounce"></i>
+                      <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-bold">Click to upload</span> or drag and drop</p>
+                      <p class="text-3xs text-gray-400">Accepts .CSV or .VCF (vCard) files up to 10MB</p>
+                      <span id="file-name" class="mt-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 hidden"></span>
+                    </div>
+                    <input id="dropzone-file" name="file" type="file" accept=".csv,.vcf" class="hidden" required onchange="displayFilename(this)" />
+                  </label>
+                </div>
+
+                <button type="submit" class="w-full py-3 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-2xl shadow-lg hover:shadow-emerald-600/20 active:scale-98 transition-all duration-200 flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-circle-check"></i>
+                  Start Import
+                </button>
+              </form>
+            </div>
+
+            <!-- CSV Formatting Guide -->
+            <div class="mt-4 p-4 bg-gray-50/50 dark:bg-gray-950/30 rounded-2xl border border-gray-200/30 dark:border-gray-800/30 space-y-2">
+              <h3 class="text-xs font-extrabold uppercase text-gray-400 tracking-wider">CSV Columns Format</h3>
+              <p class="text-3xs leading-relaxed text-gray-500 dark:text-gray-400">
+                To import correctly, ensure your CSV header has the following columns:
+              </p>
+              <code class="block p-2 bg-white dark:bg-gray-900 text-emerald-600 dark:text-emerald-400 rounded-lg text-4xs font-mono overflow-x-auto whitespace-nowrap">
+                Name, Email, Phone, Address, Description, Website, LinkedIn, Favorite
+              </code>
+              <p class="text-4xs text-gray-455 dark:text-gray-500">
+                * Note: <code>Favorite</code> can be "true" or "false". Other columns can be empty.
+              </p>
+            </div>
+          </div>
+
+          <!-- Export Contacts Card -->
+          <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-800/40 rounded-3xl shadow-xl p-8 space-y-6 flex flex-col justify-between">
+            <div class="space-y-6">
+              <div class="flex items-center gap-3">
+                <div class="p-3 bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-2xl">
+                  <i class="fa-solid fa-file-export text-xl"></i>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold">Export Contacts</h2>
+                  <p class="text-xs text-gray-450 dark:text-gray-400">Download your entire contact catalog.</p>
+                </div>
+              </div>
+
+              <p class="text-xs text-gray-650 dark:text-gray-400 leading-relaxed">
+                Keep a safe backup of your contact list or sync them with Google Contacts, Outlook, iOS, or Android devices.
+              </p>
+
+              <div class="grid gap-4 mt-6">
+                <!-- Export to CSV Button -->
+                <a th:href="@{'/user/contacts/export/csv'}" class="p-5 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 hover:from-emerald-500/20 hover:to-teal-500/20 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-500/20 rounded-2xl flex items-center justify-between group transition-all duration-350">
+                  <div class="flex items-center gap-4">
+                    <div class="p-3 bg-emerald-500 text-white rounded-xl shadow-md shadow-emerald-500/20">
+                      <i class="fa-solid fa-file-csv text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                      <h4 class="text-xs font-bold text-gray-900 dark:text-white">Export as CSV</h4>
+                      <p class="text-3xs text-gray-450 dark:text-gray-400 mt-0.5">Best for Excel & spreadsheets</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+
+                <!-- Export to vCard Button -->
+                <a th:href="@{'/user/contacts/export/vcard'}" class="p-5 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 hover:from-blue-500/20 hover:to-indigo-500/20 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-500/20 rounded-2xl flex items-center justify-between group transition-all duration-350">
+                  <div class="flex items-center gap-4">
+                    <div class="p-3 bg-blue-500 text-white rounded-xl shadow-md shadow-blue-500/20">
+                      <i class="fa-solid fa-address-book text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                      <h4 class="text-xs font-bold text-gray-900 dark:text-white">Export as vCard (VCF)</h4>
+                      <p class="text-3xs text-gray-450 dark:text-gray-400 mt-0.5">Best for Google, Outlook & Apple Phones</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="p-4 bg-blue-50/30 dark:bg-blue-950/10 rounded-2xl border border-blue-500/10 text-center text-3xs text-gray-500 dark:text-gray-400 flex items-center gap-2 justify-center">
+              <i class="fa-solid fa-circle-info text-blue-500"></i>
+              <span>Your data is exported securely from the local database.</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function displayFilename(input) {
+      const fileNameSpan = document.getElementById('file-name');
+      if (input.files && input.files.length > 0) {
+        fileNameSpan.innerText = 'Selected file: ' + input.files[0].name;
+        fileNameSpan.classList.remove('hidden');
+      } else {
+        fileNameSpan.innerText = '';
+        fileNameSpan.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
