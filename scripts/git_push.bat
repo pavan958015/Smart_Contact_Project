@@ -1,7 +1,7 @@
 @echo off
 title Git Auto Commit and Push
 echo ==============================================
-echo       SCM 2.0 Git Auto Commit and Push
+echo       Next Gen Contact Hub Git Auto Commit and Push
 echo ==============================================
 echo.
 

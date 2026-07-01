@@ -3,14 +3,14 @@ import pymysql
 # AWS (Source) database credentials
 AWS_HOST = "scm-db.cbq80wao2479.ap-south-1.rds.amazonaws.com"
 AWS_PORT = 3306
-AWS_DB = "scm20"
+AWS_DB = "ngch_db"
 AWS_USER = "admin"
 AWS_PASSWORD = "Pavan9580"
 
 # Local (Target) database credentials
 LOCAL_HOST = "localhost"
 LOCAL_PORT = 3306
-LOCAL_DB = "scm20"
+LOCAL_DB = "ngch_db"
 LOCAL_USER = "root"
 LOCAL_PASSWORD = "Pavan@2006"
 
